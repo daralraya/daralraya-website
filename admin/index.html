@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>لوحة تحكم دار الراية - المطور</title>
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <style>
+    /* تحسين واجهة الأدمن لتبدو كأداة تصميم */
+    .nc-app-container { font-family: 'Tajawal', sans-serif !important; }
+    .nc-previewPane-frame { background: #f0f0f0 !important; padding: 20px !important; }
+  </style>
+</head>
+<body>
+  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+  <script>
+    // تسجيل المعاينة الحية الحقيقية (تجربة البوربوينت)
+    const VisualPreview = createClass({
+      render: function() {
+        const entry = this.props.entry;
+        const data = entry.getIn(['data']).toJS();
+        
+        // محاكاة الموقع الحقيقي بالكامل
+        return h('div', {style: {direction: 'rtl', fontFamily: 'Tajawal, sans-serif'}},
+          // الهيدر الملكي
+          h('header', {style: {background: data.colors?.primary_color || '#1E3A8A', borderBottom: `4px solid ${data.colors?.secondary_color || '#F1C40F'}`, padding: '20px', textAlign: 'center'}},
+            h('div', {style: {fontSize: '36px', color: data.colors?.secondary_color || '#F1C40F', fontWeight: 'bold'}}, data.content_ar?.hero_title || 'دار الراية للنشر والتوزيع')
+          ),
+          // منطقة الهيرو
+          h('div', {style: {background: data.colors?.primary_color || '#1E3A8A', color: '#fff', padding: '60px 20px', textAlign: 'center'}},
+            h('h1', {style: {fontSize: `${data.fonts?.heading_size || 38}px`, color: data.colors?.secondary_color || '#F1C40F'}}, data.content_ar?.hero_title),
+            h('p', {style: {fontSize: `${data.fonts?.text_size || 18}px`}}, data.content_ar?.hero_subtitle)
+          ),
+          // رسالة توضيحية للمستخدم
+          h('div', {style: {background: '#fff3cd', padding: '15px', margin: '20px', borderRadius: '8px', border: '1px solid #ffeeba', color: '#856404', textAlign: 'center'}},
+            'هذه هي "المعاينة الحية". أي تغيير في الألوان أو النصوص يظهر هنا فوراً. يمكنك سحب الأقسام في القائمة الجانبية لتغيير ترتيبها.'
+          )
+        );
+      }
+    });
+
+    CMS.registerPreviewTemplate("settings", VisualPreview);
+  </script>
+</body>
+</html>
