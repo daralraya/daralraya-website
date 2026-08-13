@@ -6,7 +6,7 @@ import {
   getDownloadManifest,
   uploadDownloadFile,
   type DownloadEntry,
-} from "@/lib/downloads-server";
+} from "@/lib/downloads";
 
 const field = "w-full border border-border bg-background/60 px-3 py-2.5 text-sm outline-none transition-colors focus:border-brass";
 const label = "mb-1.5 block text-[0.6rem] tracking-[0.18em] text-muted-foreground uppercase";

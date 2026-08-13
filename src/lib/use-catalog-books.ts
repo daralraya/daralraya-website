@@ -4,7 +4,7 @@ import {
   getCatalogOverrides,
   saveCatalogOverrides,
   type CatalogOverrides,
-} from "@/lib/catalog-overrides-server";
+} from "@/lib/catalog-overrides";
 
 export function mergeCatalogBooks(overrides: CatalogOverrides): Book[] {
   const edited = overrides.edited as Record<string, Partial<Book>>;

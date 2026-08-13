@@ -22,7 +22,7 @@ import {
 } from "react";
 import type { Bilingual, Category } from "@/data/catalog";
 import { books, featuredSlugs, newReleaseSlugs, categories as defaultCategories } from "@/data/catalog";
-import { getContentStore, saveContentStore } from "./content-server";
+import { getContentStore, saveContentStore } from "./content-rpc";
 
 const safeFeaturedSlugs = Array.isArray(featuredSlugs) ? featuredSlugs : [];
 const safeNewReleaseSlugs = Array.isArray(newReleaseSlugs) ? newReleaseSlugs.slice(0, 12) : [];

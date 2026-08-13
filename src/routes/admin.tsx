@@ -7,7 +7,7 @@ import { useContent, defaultContent, type SiteContent, booksBySlugs } from "@/li
 import { useAnalytics } from "@/lib/analytics";
 import { type Book, type Category } from "@/data/catalog";
 import { persistAddedBook, persistBookOverride, useCatalogBooks } from "@/lib/use-catalog-books";
-import { uploadCatalogCover } from "@/lib/catalog-cover-upload-server";
+import { uploadCatalogCover } from "@/lib/catalog-cover-upload";
 import { BookCover } from "@/components/site/BookCover";
 import { LiveVisualEditor } from "@/components/admin/LiveVisualEditor";
 import { DownloadsManager } from "@/components/admin/DownloadsManager";

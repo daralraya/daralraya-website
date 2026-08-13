@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { FileSpreadsheet, Download } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
-import { getDownloadManifest, type DownloadEntry } from "@/lib/downloads-server";
+import { getDownloadManifest, type DownloadEntry } from "@/lib/downloads";
 
 export const Route = createFileRoute("/downloads")({
   head: () => ({
