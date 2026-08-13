@@ -1,0 +1,241 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+ * Design tokens
+ * ------------------------------------------------------------------ */
+:root {
+  --background: #0c0f1a;
+  --foreground: #eae3d4;
+  --muted: #7c7a74;
+  --border: rgba(234, 227, 212, 0.08);
+  --primary: #141a2b;
+  --primary-foreground: #eae3d4;
+  --surface: rgba(234, 227, 212, 0.04);
+  --brass: #c9a84c;
+  --brass-soft: #e0c97a;
+  --shadow-brass: 0 1px 2px rgba(201, 168, 76, 0.15);
+  --shadow-lift: 0 8px 24px rgba(0, 0, 0, 0.3);
+  --gradient-spine: linear-gradient(135deg, #0f1528 0%, #1a2040 50%, #0f1528 100%);
+  --gradient-brass: linear-gradient(180deg, #c9a84c 0%, #8b6f2a 100%);
+  --radius: 0.25rem;
+}
+
+/* ------------------------------------------------------------------
+ * Typography
+ * ------------------------------------------------------------------ */
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans, "Manrope", sans-serif);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@utility font-display {
+  font-family: "Amiri", serif;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+@utility prose-ar {
+  font-family: "Tajawal", sans-serif;
+  line-height: 1.85;
+}
+
+@utility text-balance-title {
+  text-wrap: balance;
+}
+
+@utility text-cream {
+  color: #eae3d4;
+}
+
+@utility grain {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+}
+
+@utility gold-text {
+  color: var(--brass);
+}
+
+/* ------------------------------------------------------------------
+ * Surface & glass
+ * ------------------------------------------------------------------ */
+@utility veil {
+  background: linear-gradient(180deg, rgba(12, 15, 26, 0.75) 0%, rgba(12, 15, 26, 0.95) 100%);
+}
+
+@utility hairline {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--brass) 30%, var(--brass) 70%, transparent);
+  opacity: 0.35;
+}
+
+.sheen {
+  position: relative;
+  overflow: hidden;
+}
+
+.sheen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 40%, rgba(201, 168, 76, 0.06) 50%, transparent 60%);
+  transform: translateX(-100%);
+  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sheen:hover::after {
+  transform: translateX(100%);
+}
+
+/* ------------------------------------------------------------------
+ * Micro-interactions
+ * ------------------------------------------------------------------ */
+.nudge {
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.nudge:hover {
+  transform: translateY(-1px);
+}
+
+.link-brass {
+  color: var(--brass);
+  transition: color 0.3s ease;
+}
+
+.link-brass:hover {
+  color: var(--brass-soft);
+}
+
+.lift {
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease;
+}
+
+.lift:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-brass);
+}
+
+/* ------------------------------------------------------------------
+ * Section labels
+ * ------------------------------------------------------------------ */
+@utility eyebrow {
+  font-size: 0.875rem;
+  letter-spacing: 0.12em;
+  color: var(--brass);
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+/* ------------------------------------------------------------------
+ * Reveal animations
+ * ------------------------------------------------------------------ */
+@utility fade-up {
+  animation: fadeUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ------------------------------------------------------------------
+ * Motion: scroll reveals, hover choreography, luxury easing.
+ * ------------------------------------------------------------------ */
+
+:root {
+  --ease-silk: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-quiet: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.8s var(--ease-silk), transform 0.8s var(--ease-silk);
+}
+
+[data-reveal][data-shown="true"] {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+[data-reveal="rise"] {
+  transform: translateY(40px);
+}
+
+[data-reveal="fade"] {
+  transform: translateY(0);
+  opacity: 0;
+}
+
+[data-reveal="reveal-x"] {
+  transform: translateX(30px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal],
+  [data-reveal][data-shown="true"] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .hero-drift {
+    animation: none;
+  }
+}
+
+/* ------------------------------------------------------------------
+ * Hero motion
+ * ------------------------------------------------------------------ */
+@keyframes drift {
+  0%, 100% {
+    transform: scale(1) translate(0, 0);
+  }
+  50% {
+    transform: scale(1.04) translate(-1%, 0.5%);
+  }
+}
+
+@utility hero-drift {
+  animation: drift 18s ease-in-out infinite;
+}
+
+/* ------------------------------------------------------------------
+ * RTL overrides
+ * ------------------------------------------------------------------ */
+[dir="rtl"] {
+  font-family: "Tajawal", "Amiri", sans-serif;
+}
+
+[dir="rtl"] .font-display {
+  font-family: "Amiri", serif;
+}
+
+/* ------------------------------------------------------------------
+ * Marquee track (for CSS-only marquees)
+ * ------------------------------------------------------------------ */
+@utility marquee-track {
+  animation: marquee 38s linear infinite;
+}

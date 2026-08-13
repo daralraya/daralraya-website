@@ -1,0 +1,223 @@
+{
+  "hero": {
+    "eyebrow": {
+      "ar": "دار نشر أردنية",
+      "en": "A Jordanian publishing house"
+    },
+    "title": {
+      "ar": "دار الراية",
+      "en": "Dar Al-Raya"
+    },
+    "subtitle": {
+      "ar": "للنشر والتوزيع",
+      "en": "Publishing & Distribution"
+    },
+    "tagline": {
+      "ar": "نرفع رايتكم بين رفوف القرّاء",
+      "en": "We raise your banner on readers' shelves"
+    }
+  },
+  "featured": [
+    "ادارة-العمليات-النقدية",
+    "ادارة-المكاتب-والسكرتاريا",
+    "اسواق-التجزئة",
+    "الاتصال-والفعالية-التنظيمية-في-عصر-الذكاء-الاصطناعي",
+    "الاداءات-اللغويه-في-احاديث-الاسراء-و-المعراج",
+    "الادارة-العامة",
+    "الاساليب-الحديثة-في-التدريب-الاداري",
+    "الاصلاح-الاداري",
+    "الاطار-القانوني-للاثبات-الالكتروني",
+    "التأمين-ومواجهة-المخاطر"
+  ],
+  "newReleases": [
+    "التسويق-المباشر",
+    "التنظيم-القانوني-للعقود-الوارده-على-الملكيه",
+    "التنمر-الالكترونيدليل-الاسره-الوقايه-والعلاج",
+    "الدرر-الفلسطينيه-في-مدح-سيد-البريه",
+    "الساحة-السياسية-والاحتيال-السياسي-والشعب-المغبون",
+    "العملية-التحريرية-مترجم",
+    "القيادة-الادارية",
+    "الكليات-اللغوية-العربية-في-ظل-طروحات-اللسانيات-العامة",
+    "المحلل-النحوي-لانماط-اللغة-العربية-في-ضوء-اللسانيات-الحاسوبية",
+    "الهيكل-التنظيمي-للمنظمة"
+  ],
+  "categories": [
+    {
+      "slug": "law",
+      "name": {
+        "ar": "القانون",
+        "en": "Law"
+      },
+      "blurb": {
+        "ar": "مؤلفات قانونية في الفقه الدستوري والتجاري والجزائي.",
+        "en": "Legal texts in constitutional, commercial and criminal law."
+      }
+    },
+    {
+      "slug": "politics",
+      "name": {
+        "ar": "العلوم السياسية",
+        "en": "Political Science"
+      },
+      "blurb": {
+        "ar": "دراسات في العلاقات الدولية والسياسة العامة والنظم السياسية.",
+        "en": "Studies in international relations, public policy and political systems."
+      }
+    },
+    {
+      "slug": "language",
+      "name": {
+        "ar": "اللغة العربية",
+        "en": "Arabic Language"
+      },
+      "blurb": {
+        "ar": "نحو وصرف وبلاغة ومعاجم ومراجع لغوية.",
+        "en": "Grammar, rhetoric, lexicons and linguistic reference works."
+      }
+    },
+    {
+      "slug": "literature",
+      "name": {
+        "ar": "الأدب",
+        "en": "Literature"
+      },
+      "blurb": {
+        "ar": "روايات وقصص ونصوص أدبية لأصوات عربية معاصرة.",
+        "en": "Novels, short stories and literary texts by contemporary Arab voices."
+      }
+    },
+    {
+      "slug": "management",
+      "name": {
+        "ar": "الإدارة",
+        "en": "Management"
+      },
+      "blurb": {
+        "ar": "إدارة الأعمال، التسويق، الموارد البشرية وسلاسل الإمداد.",
+        "en": "Business administration, marketing, HR and supply chains."
+      }
+    },
+    {
+      "slug": "religious",
+      "name": {
+        "ar": "الدراسات الدينية",
+        "en": "Religious Studies"
+      },
+      "blurb": {
+        "ar": "بحوث ودراسات في الفقه والسيرة والفكر الإسلامي.",
+        "en": "Research in jurisprudence, biography and Islamic thought."
+      }
+    },
+    {
+      "slug": "self-development",
+      "name": {
+        "ar": "التنمية البشرية",
+        "en": "Self-Development"
+      },
+      "blurb": {
+        "ar": "كتب تطوير الذات والمهارات الحياتية والنفسية.",
+        "en": "Self-improvement, life skills and psychological development."
+      }
+    },
+    {
+      "slug": "tourism",
+      "name": {
+        "ar": "السياحة",
+        "en": "Tourism"
+      },
+      "blurb": {
+        "ar": "دليل سياحي وثقافي عن الأردن والمنطقة العربية.",
+        "en": "Cultural and travel guides about Jordan and the Arab region."
+      }
+    },
+    {
+      "slug": "history",
+      "name": {
+        "ar": "التاريخ",
+        "en": "History"
+      },
+      "blurb": {
+        "ar": "تاريخ الأردن والمنطقة العربية وتاريخ الحضارات.",
+        "en": "History of Jordan, the Arab region and civilisations."
+      }
+    },
+    {
+      "slug": "philosophy",
+      "name": {
+        "ar": "الفلسفة",
+        "en": "Philosophy"
+      },
+      "blurb": {
+        "ar": "نصوص فلسفية كلاسيكية ومعاصرة وعربية.",
+        "en": "Classical and contemporary philosophical texts in Arabic."
+      }
+    },
+    {
+      "slug": "education",
+      "name": {
+        "ar": "التربية",
+        "en": "Education"
+      },
+      "blurb": {
+        "ar": "كتب تربوية وعلمية ومناهج التدريس.",
+        "en": "Educational texts, curricula and teaching methods."
+      }
+    }
+  ],
+  "archivedSlugs": [],
+  "visualEditor": {
+    "overrides": [
+      {
+        "selector": "div:nth-of-type(1) > main:nth-of-type(1) > section:nth-of-type(1) > div:nth-of-type(2) > p:nth-of-type(1)",
+        "styles": {
+          "fontSize": "30px",
+          "fontFamily": "Cormorant Garamond, serif",
+          "fontWeight": "500"
+        },
+        "text": "دار الراية للنشر والتوزيع"
+      },
+      {
+        "selector": "div:nth-of-type(1) > main:nth-of-type(1) > section:nth-of-type(3) > div:nth-of-type(1) > div:nth-of-type(1) > h2:nth-of-type(1)",
+        "styles": {
+          "color": "#c9a84c"
+        }
+      },
+      {
+        "selector": "div:nth-of-type(1) > main:nth-of-type(1) > section:nth-of-type(4) > div:nth-of-type(1) > p:nth-of-type(1)",
+        "styles": {
+          "color": "#c9a84c"
+        }
+      },
+      {
+        "selector": "div:nth-of-type(1) > main:nth-of-type(1) > section:nth-of-type(5) > div:nth-of-type(1) > p:nth-of-type(1)",
+        "styles": {
+          "color": "#c9a84c"
+        }
+      },
+      {
+        "selector": "div:nth-of-type(1) > footer:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > h3:nth-of-type(1)",
+        "styles": {
+          "color": "#c9a84c"
+        }
+      },
+      {
+        "selector": "div:nth-of-type(1) > footer:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(3) > h3:nth-of-type(1)",
+        "styles": {
+          "color": "#c9a84c"
+        }
+      },
+      {
+        "selector": "div:nth-of-type(1) > main:nth-of-type(1) > div:nth-of-type(1) > p:nth-of-type(1)",
+        "styles": {},
+        "text": ""
+      },
+      {
+        "selector": "div:nth-of-type(1) > main:nth-of-type(1) > div:nth-of-type(1) > h1:nth-of-type(1)",
+        "styles": {
+          "color": "#a88e43"
+        }
+      }
+    ],
+    "addedImages": []
+  }
+}
