@@ -1,4 +1,3 @@
-import { createServerFn } from "@tanstack/react-start";
 import { requireAdminSession } from "./admin-auth";
 import * as path from "node:path";
 import { randomBytes } from "node:crypto";
@@ -25,13 +24,20 @@ export type DownloadEntry = {
   labelEn: string;
   size: number;
   updatedAt: string;
-  /** Present for files uploaded through the Admin panel after Netlify publication. */
   storageKey?: string;
 };
 
 type DownloadStore = { files: DownloadEntry[] };
 
 const emptyStore: DownloadStore = { files: [] };
+
+const uploadInput = z.object({
+  filename: z.string().min(1).max(255),
+  labelAr: z.string().min(1).max(200),
+  labelEn: z.string().min(1).max(200),
+  dataUrl: z.string().min(1),
+});
+const deleteInput = z.object({ id: z.string().min(8).max(100) });
 
 function safeFilename(value: string): string {
   const base = path.basename(value).trim().replace(/[^\p{L}\p{N}._-]/gu, "-").replace(/-+/g, "-");
@@ -78,52 +84,45 @@ export async function getStoredDownloadFile(id: string): Promise<{ data: ArrayBu
   return data ? { data, filename: entry.filename } : null;
 }
 
-export const getDownloadManifest = createServerFn({ method: "GET" }).handler(async () => {
+export async function getDownloadManifestAction() {
   const store = await readStore();
   return store.files;
-});
+}
 
-export const uploadDownloadFile = createServerFn({ method: "POST" })
-  .validator(z.object({
-    filename: z.string().min(1).max(255),
-    labelAr: z.string().min(1).max(200),
-    labelEn: z.string().min(1).max(200),
-    dataUrl: z.string().min(1),
-  }))
-  .handler(async ({ data }) => {
-    await requireAdminSession();
-    const original = safeFilename(data.filename);
-    const buffer = decodeFileData(data.dataUrl);
-    const id = randomBytes(16).toString("hex");
-    const storedFilename = `${Date.now()}-${randomBytes(4).toString("hex")}-${original}`;
-    const storageKey = `downloads/${id}/${storedFilename}`;
-    await writePersistentFile(storageKey, path.join(DOWNLOADS_DIR, storedFilename), buffer);
+export async function uploadDownloadFileAction(input: unknown) {
+  const data = uploadInput.parse(input);
+  await requireAdminSession();
+  const original = safeFilename(data.filename);
+  const buffer = decodeFileData(data.dataUrl);
+  const id = randomBytes(16).toString("hex");
+  const storedFilename = `${Date.now()}-${randomBytes(4).toString("hex")}-${original}`;
+  const storageKey = `downloads/${id}/${storedFilename}`;
+  await writePersistentFile(storageKey, path.join(DOWNLOADS_DIR, storedFilename), buffer);
 
-    const entry: DownloadEntry = {
-      id,
-      filename: original,
-      url: mediaPath(id),
-      labelAr: data.labelAr.trim(),
-      labelEn: data.labelEn.trim(),
-      size: buffer.length,
-      updatedAt: new Date().toISOString(),
-      storageKey,
-    };
-    const store = await readStore();
-    await writeStore({ files: [...store.files, entry] });
-    return entry;
-  });
+  const entry: DownloadEntry = {
+    id,
+    filename: original,
+    url: mediaPath(id),
+    labelAr: data.labelAr.trim(),
+    labelEn: data.labelEn.trim(),
+    size: buffer.length,
+    updatedAt: new Date().toISOString(),
+    storageKey,
+  };
+  const store = await readStore();
+  await writeStore({ files: [...store.files, entry] });
+  return entry;
+}
 
-export const deleteDownloadFile = createServerFn({ method: "POST" })
-  .validator(z.object({ id: z.string().min(8).max(100) }))
-  .handler(async ({ data }) => {
-    await requireAdminSession();
-    const store = await readStore();
-    const entry = store.files.find((file) => file.id === data.id);
-    if (!entry) throw new Error("الملف غير موجود");
-    if (entry.storageKey) {
-      await deletePersistentFile(entry.storageKey, path.join(DOWNLOADS_DIR, entry.filename));
-    }
-    await writeStore({ files: store.files.filter((file) => file.id !== data.id) });
-    return { success: true };
-  });
+export async function deleteDownloadFileAction(input: unknown) {
+  const data = deleteInput.parse(input);
+  await requireAdminSession();
+  const store = await readStore();
+  const entry = store.files.find((file) => file.id === data.id);
+  if (!entry) throw new Error("الملف غير موجود");
+  if (entry.storageKey) {
+    await deletePersistentFile(entry.storageKey, path.join(DOWNLOADS_DIR, entry.filename));
+  }
+  await writeStore({ files: store.files.filter((file) => file.id !== data.id) });
+  return { success: true };
+}

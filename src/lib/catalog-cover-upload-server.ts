@@ -1,4 +1,3 @@
-import { createServerFn } from "@tanstack/react-start";
 import { requireAdminSession } from "./admin-auth";
 import * as path from "node:path";
 import {
@@ -39,14 +38,12 @@ export async function getStoredCoverFile(filename: string): Promise<ArrayBuffer 
   return await readPersistentFile(`covers/${safe}`, path.join(COVERS_DIR, safe));
 }
 
-export const uploadCatalogCover = createServerFn({ method: "POST" })
-  .validator((data: { slug: unknown; dataUrl: unknown }) => data)
-  .handler(async ({ data }) => {
-    await requireAdminSession();
-    const stem = safeFileStem(data.slug);
-    const image = decodeImageData(data.dataUrl);
-    const filename = `${stem}.${image.extension}`;
-    await writePersistentFile(`covers/${filename}`, path.join(COVERS_DIR, filename), image.buffer);
+export async function uploadCatalogCoverAction(data: { slug: unknown; dataUrl: unknown }) {
+  await requireAdminSession();
+  const stem = safeFileStem(data.slug);
+  const image = decodeImageData(data.dataUrl);
+  const filename = `${stem}.${image.extension}`;
+  await writePersistentFile(`covers/${filename}`, path.join(COVERS_DIR, filename), image.buffer);
 
-    return { success: true, cover: `/media/cover/${encodeURIComponent(filename)}` };
-  });
+  return { success: true, cover: `/media/cover/${encodeURIComponent(filename)}` };
+}

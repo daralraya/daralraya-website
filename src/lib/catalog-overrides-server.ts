@@ -1,4 +1,3 @@
-import { createServerFn } from "@tanstack/react-start";
 import { requireAdminSession } from "./admin-auth";
 import * as path from "node:path";
 import overridesSeed from "@/data/catalog-overrides.json";
@@ -28,18 +27,16 @@ async function readOverridesFile(): Promise<CatalogOverrides> {
   }
 }
 
-export const getCatalogOverrides = createServerFn({ method: "GET" }).handler(
-  async () => readOverridesFile(),
-);
+export async function getCatalogOverridesAction() {
+  return await readOverridesFile();
+}
 
-export const saveCatalogOverrides = createServerFn({ method: "POST" })
-  .validator((data: CatalogOverrides) => data)
-  .handler(async ({ data }) => {
-    await requireAdminSession();
-    const next: CatalogOverrides = {
-      edited: data.edited && typeof data.edited === "object" ? data.edited : {},
-      added: Array.isArray(data.added) ? data.added : [],
-    };
-    await writePersistentJson("catalog/overrides.json", STORE_PATH, next);
-    return { success: true, savedAt: new Date().toISOString() };
-  });
+export async function saveCatalogOverridesAction(data: CatalogOverrides) {
+  await requireAdminSession();
+  const next: CatalogOverrides = {
+    edited: data.edited && typeof data.edited === "object" ? data.edited : {},
+    added: Array.isArray(data.added) ? data.added : [],
+  };
+  await writePersistentJson("catalog/overrides.json", STORE_PATH, next);
+  return { success: true, savedAt: new Date().toISOString() };
+}

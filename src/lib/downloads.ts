@@ -16,7 +16,7 @@ const loadDownloadsServer = () => import("./downloads-server");
 
 export const getDownloadManifest = createServerFn({ method: "GET" }).handler(async () => {
   const server = await loadDownloadsServer();
-  return server.getDownloadManifest();
+  return server.getDownloadManifestAction();
 });
 
 export const uploadDownloadFile = createServerFn({ method: "POST" })
@@ -28,12 +28,12 @@ export const uploadDownloadFile = createServerFn({ method: "POST" })
   }))
   .handler(async ({ data }) => {
     const server = await loadDownloadsServer();
-    return server.uploadDownloadFile({ data });
+    return server.uploadDownloadFileAction(data);
   });
 
 export const deleteDownloadFile = createServerFn({ method: "POST" })
   .validator(z.object({ id: z.string().min(8).max(100) }))
   .handler(async ({ data }) => {
     const server = await loadDownloadsServer();
-    return server.deleteDownloadFile({ data });
+    return server.deleteDownloadFileAction(data);
   });

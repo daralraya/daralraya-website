@@ -1,10 +1,8 @@
-import { createServerFn } from "@tanstack/react-start";
 import {
   getRequestIP,
   getRequestUrl,
   useSession,
 } from "@tanstack/react-start/server";
-import { z } from "zod";
 import { createHash, randomBytes, scrypt as nodeScrypt, timingSafeEqual } from "node:crypto";
 import { promisify } from "node:util";
 import * as fs from "node:fs";
@@ -143,46 +141,42 @@ export async function requireAdminSession() {
   return session;
 }
 
-export const getAdminAuthStatus = createServerFn({ method: "GET" }).handler(async () => {
+export async function getAdminAuthStatusAction() {
   const session = await getAdminSession();
   return { authenticated: session.data.admin === true };
-});
+}
 
-export const loginAdmin = createServerFn({ method: "POST" })
-  .validator(z.object({ password: z.string().min(1).max(200) }))
-  .handler(async ({ data }) => {
-    if (!consumeRateLimit(requestKey("admin-login"), 5, 15 * 60 * 1000)) {
-      throw new Error("محاولات كثيرة. حاول مرة أخرى بعد قليل.");
-    }
-    const store = await readAuthStore();
-    const valid = await verifyPassword(data.password, store.password);
-    if (!valid) throw new Error("كلمة السر غير صحيحة");
-    const session = await getAdminSession();
-    await session.clear();
-    await session.update({ admin: true });
-    return { authenticated: true };
-  });
+export async function loginAdminAction(data: { password: string }) {
+  if (!consumeRateLimit(requestKey("admin-login"), 5, 15 * 60 * 1000)) {
+    throw new Error("محاولات كثيرة. حاول مرة أخرى بعد قليل.");
+  }
+  const store = await readAuthStore();
+  const valid = await verifyPassword(data.password, store.password);
+  if (!valid) throw new Error("كلمة السر غير صحيحة");
+  const session = await getAdminSession();
+  await session.clear();
+  await session.update({ admin: true });
+  return { authenticated: true };
+}
 
-export const logoutAdmin = createServerFn({ method: "POST" }).handler(async () => {
+export async function logoutAdminAction() {
   const session = await getAdminSession();
   await session.clear();
   return { authenticated: false };
-});
+}
 
-export const changeAdminPassword = createServerFn({ method: "POST" })
-  .validator(z.object({ currentPassword: z.string().min(1).max(200), newPassword: z.string().min(PASSWORD_MIN_LENGTH).max(200) }))
-  .handler(async ({ data }) => {
-    const session = await requireAdminSession();
-    const store = await readAuthStore();
-    if (!(await verifyPassword(data.currentPassword, store.password))) {
-      throw new Error("كلمة السر الحالية غير صحيحة");
-    }
-    const nextPassword = await hashPassword(data.newPassword);
-    await writeAuthStore({ password: nextPassword, updatedAt: new Date().toISOString() });
-    await session.clear();
-    await session.update({ admin: true });
-    return { success: true };
-  });
+export async function changeAdminPasswordAction(data: { currentPassword: string; newPassword: string }) {
+  const session = await requireAdminSession();
+  const store = await readAuthStore();
+  if (!(await verifyPassword(data.currentPassword, store.password))) {
+    throw new Error("كلمة السر الحالية غير صحيحة");
+  }
+  const nextPassword = await hashPassword(data.newPassword);
+  await writeAuthStore({ password: nextPassword, updatedAt: new Date().toISOString() });
+  await session.clear();
+  await session.update({ admin: true });
+  return { success: true };
+}
 
 async function sendResetEmail(resetToken: string): Promise<void> {
   const sender = requiredEnv("ADMIN_AUTH_EMAIL");
@@ -204,43 +198,39 @@ async function sendResetEmail(resetToken: string): Promise<void> {
   });
 }
 
-export const requestAdminPasswordReset = createServerFn({ method: "POST" })
-  .validator(z.object({ email: z.string().email().max(320) }))
-  .handler(async ({ data }) => {
-    if (!consumeRateLimit(requestKey("admin-reset"), 3, 15 * 60 * 1000)) {
-      throw new Error("محاولات كثيرة. حاول مرة أخرى بعد قليل.");
-    }
-    const expectedEmail = process.env.ADMIN_RECOVERY_EMAIL?.trim().toLowerCase();
-    if (expectedEmail && data.email.trim().toLowerCase() === expectedEmail) {
-      const token = randomBytes(32).toString("base64url");
-      const store = await readAuthStore();
-      await writeAuthStore({
-        ...store,
-        resetTokenHash: hashResetToken(token),
-        resetTokenExpiresAt: Date.now() + RESET_TTL_MS,
-      });
-      await sendResetEmail(token);
-    }
-    return { accepted: true };
-  });
-
-export const resetAdminPassword = createServerFn({ method: "POST" })
-  .validator(z.object({ token: z.string().min(32).max(200), newPassword: z.string().min(PASSWORD_MIN_LENGTH).max(200) }))
-  .handler(async ({ data }) => {
+export async function requestAdminPasswordResetAction(data: { email: string }) {
+  if (!consumeRateLimit(requestKey("admin-reset"), 3, 15 * 60 * 1000)) {
+    throw new Error("محاولات كثيرة. حاول مرة أخرى بعد قليل.");
+  }
+  const expectedEmail = process.env.ADMIN_RECOVERY_EMAIL?.trim().toLowerCase();
+  if (expectedEmail && data.email.trim().toLowerCase() === expectedEmail) {
+    const token = randomBytes(32).toString("base64url");
     const store = await readAuthStore();
-    const validToken = store.resetTokenHash === hashResetToken(data.token)
-      && typeof store.resetTokenExpiresAt === "number"
-      && Date.now() < store.resetTokenExpiresAt;
-    if (!validToken) throw new Error("الرابط غير صالح أو انتهت صلاحيته");
-    const nextPassword = await hashPassword(data.newPassword);
     await writeAuthStore({
-      password: nextPassword,
-      updatedAt: new Date().toISOString(),
+      ...store,
+      resetTokenHash: hashResetToken(token),
+      resetTokenExpiresAt: Date.now() + RESET_TTL_MS,
     });
-    const session = await getAdminSession();
-    await session.clear();
-    await session.update({ admin: true });
-    return { success: true };
+    await sendResetEmail(token);
+  }
+  return { accepted: true };
+}
+
+export async function resetAdminPasswordAction(data: { token: string; newPassword: string }) {
+  const store = await readAuthStore();
+  const validToken = store.resetTokenHash === hashResetToken(data.token)
+    && typeof store.resetTokenExpiresAt === "number"
+    && Date.now() < store.resetTokenExpiresAt;
+  if (!validToken) throw new Error("الرابط غير صالح أو انتهت صلاحيته");
+  const nextPassword = await hashPassword(data.newPassword);
+  await writeAuthStore({
+    password: nextPassword,
+    updatedAt: new Date().toISOString(),
   });
+  const session = await getAdminSession();
+  await session.clear();
+  await session.update({ admin: true });
+  return { success: true };
+}
 
 export const ADMIN_PASSWORD_MIN_LENGTH = PASSWORD_MIN_LENGTH;
